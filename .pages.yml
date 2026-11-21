@@ -78,6 +78,11 @@ content:
       - name: ifood
         label: Link do iFood
         type: string
+        description: Com o link, aparece o botão "Pedir pelo iFood".
+      - name: no_ifood
+        label: Está no iFood (mesmo sem o link)
+        type: boolean
+        description: Ligado e sem link, o site mostra "Também estamos no iFood. Procure pelo nome no app".
       - name: instagram
         label: Link do Instagram
         type: string

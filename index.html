@@ -134,6 +134,9 @@ layout: null
     .botao span { text-align: left; line-height: 1.2; }
     .zap { background: var(--cheiro); color: #fff; box-shadow: 0 10px 0 -2px #0F5733, 0 18px 26px -14px rgba(15, 87, 51, .8); }
     .ifood { background: var(--prato); color: var(--colorau); box-shadow: 0 0 0 2px var(--colorau); }
+    .ifood.sem-link { box-shadow: 0 0 0 2px rgba(198, 42, 29, .35); }
+    .ifood.sem-link small { color: var(--carvao); }
+    .insta { background: var(--carvao); color: var(--prato); }
 
     /* ---------- Cartões ---------- */
     .cartao {
@@ -301,6 +304,17 @@ layout: null
         <svg aria-hidden="true"><use href="#i-ifood"/></svg>
         <span>Pedir pelo iFood</span>
       </a>
+      {%- elsif c.no_ifood %}
+      <p class="botao ifood sem-link">
+        <svg aria-hidden="true"><use href="#i-ifood"/></svg>
+        <span>Também estamos no iFood<small>Procure por {{ c.nome | escape }} no app</small></span>
+      </p>
+      {%- endif %}
+      {%- if c.instagram and c.instagram != "" %}
+      <a class="botao insta" href="{{ c.instagram | escape }}" target="_blank" rel="noopener">
+        <svg aria-hidden="true"><use href="#i-instagram"/></svg>
+        <span>Ver os pratos no Instagram<small>{{ c.instagram | split: "instagram.com/" | last | remove: "/" | prepend: "@" | escape }}</small></span>
+      </a>
       {%- endif %}
     </div>
 
@@ -351,17 +365,16 @@ layout: null
     </section>
     {%- endif %}
 
+    {%- if c.facebook and c.facebook != "" %}
     <nav class="redes" aria-label="Redes sociais">
-      {%- if c.instagram and c.instagram != "" %}
-      <a href="{{ c.instagram | escape }}" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-instagram"/></svg>Instagram</a>
-      {%- endif %}
       {%- if c.facebook and c.facebook != "" %}
       <a href="{{ c.facebook | escape }}" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-facebook"/></svg>Facebook</a>
       {%- endif %}
     </nav>
+    {%- endif %}
 
     <footer>
-      {{ c.nome | escape }}{% if c.cnpj and c.cnpj != "" %}<br>CNPJ {{ c.cnpj | escape }}{% endif %}
+      © {{ site.time | date: "%Y" }} {{ c.nome | escape }}. Todos os direitos reservados.{% if c.cnpj and c.cnpj != "" %}<br>CNPJ {{ c.cnpj | escape }}{% endif %}
     </footer>
   </main>
 
@@ -407,20 +420,25 @@ layout: null
       }
 
       const status = document.querySelector('.status');
-      const aberto = porDia[hoje].find((x) => agora >= x.abre && agora < x.fecha);
+      const ontem = (hoje + 6) % 7;
+      const viraNoite = (x) => x.fecha <= x.abre;            // ex.: abre 18h e fecha 4h do dia seguinte
+      const abertoHoje = porDia[hoje].find((x) => agora >= x.abre && (viraNoite(x) || agora < x.fecha));
+      const abertoDeOntem = porDia[ontem].find((x) => viraNoite(x) && agora < x.fecha);
+      const aberto = abertoHoje || abertoDeOntem;
+      const horaDe = (min) => hora(`${Math.floor(min / 60)}:${String(min % 60).padStart(2, '0')}`);
       let texto, classe;
       if (aberto) {
-        texto = `Aberto agora, até ${hora(`${Math.floor(aberto.fecha / 60)}:${String(aberto.fecha % 60).padStart(2, '0')}`)}`; classe = 'aberto';
+        texto = `Aberto agora, até ${horaDe(aberto.fecha)}`; classe = 'aberto';
       } else {
-        const maisTarde = porDia[hoje].filter((x) => x.abre > agora).sort((a, b) => a.abre - b.abre)[0];
         classe = 'fechado';
-        if (maisTarde) texto = `Fechado agora. Abre hoje às ${maisTarde.txt.split(' às ')[0]}`;
+        const maisTarde = porDia[hoje].filter((x) => x.abre > agora).sort((a, b) => a.abre - b.abre)[0];
+        if (maisTarde) texto = `Fechado agora. Abre hoje às ${horaDe(maisTarde.abre)}`;
         else {
           for (let k = 1; k <= 7; k++) {
             const d = (hoje + k) % 7;
             if (porDia[d].length) {
               const primeiro = porDia[d].slice().sort((a, b) => a.abre - b.abre)[0];
-              texto = `Fechado agora. Abre ${k === 1 ? 'amanhã' : NOMES[d].toLowerCase()} às ${primeiro.txt.split(' às ')[0]}`;
+              texto = `Fechado agora. Abre ${k === 1 ? 'amanhã' : NOMES[d].toLowerCase()} às ${horaDe(primeiro.abre)}`;
               break;
             }
           }
