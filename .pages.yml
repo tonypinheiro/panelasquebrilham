@@ -1,0 +1,132 @@
+# Configuração do editor visual (Pages CMS: https://app.pagescms.org)
+
+media:
+  input: assets/img
+  output: /assets/img
+  categories: [image]
+  rename: safe
+
+content:
+  - name: cardapio
+    label: Cardápio
+    type: file
+    path: _data/cardapio.yml
+    format: yaml
+    fields:
+      - name: observacao
+        label: Observação (aparece embaixo do título)
+        type: text
+      - name: pratos
+        label: Pratos
+        description: Arraste para mudar a ordem. Cada prato ganha um botão "Pedir" que abre o WhatsApp com o nome do prato já escrito.
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{fields.nome}"
+        fields:
+          - name: nome
+            label: Nome do prato
+            type: string
+            required: true
+          - name: mostrar
+            label: Mostrar no site
+            type: boolean
+            default: true
+          - name: descricao
+            label: Descrição curta (opcional)
+            type: string
+          - name: preco
+            label: Preço (opcional)
+            type: string
+            description: "Exemplo: R$ 25,00"
+          - name: foto
+            label: Foto (opcional)
+            type: image
+            description: "Dica: mande a foto para você mesmo no WhatsApp e salve de lá. Ela fica leve e o site abre mais rápido."
+
+  - name: config
+    label: Informações
+    type: file
+    path: _data/config.yml
+    format: yaml
+    fields:
+      - name: nome
+        label: Nome do restaurante
+        type: string
+        required: true
+      - name: slogan
+        label: Frase de efeito
+        type: string
+      - name: descricao
+        label: Descrição curta
+        type: text
+      - name: aviso
+        label: Aviso em destaque (opcional)
+        type: string
+        description: "Exemplo: Hoje tem feijoada! Deixe vazio para não mostrar."
+      - name: whatsapp
+        label: WhatsApp (só números, com 55 e DDD)
+        type: string
+        description: "Exemplo: 5598984673259"
+        pattern:
+          regex: "^(55[0-9]{10,11})?$"
+          message: "Use só números, começando com 55 e o DDD. Exemplo: 5598984673259"
+      - name: mensagem
+        label: Mensagem que já vai escrita no WhatsApp
+        type: string
+      - name: ifood
+        label: Link do iFood
+        type: string
+      - name: instagram
+        label: Link do Instagram
+        type: string
+      - name: facebook
+        label: Link do Facebook
+        type: string
+      - name: endereco
+        label: Endereço
+        type: text
+      - name: mapa
+        label: Link do Google Maps
+        type: string
+      - name: horarios
+        label: Horário de funcionamento
+        description: Se ficar vazio, o site não mostra horário nem o aviso de "aberto agora".
+        type: object
+        list: true
+        fields:
+          - name: dias
+            label: Dias
+            type: select
+            options:
+              multiple: true
+              values:
+                - { name: segunda, label: Segunda }
+                - { name: terca, label: Terça }
+                - { name: quarta, label: Quarta }
+                - { name: quinta, label: Quinta }
+                - { name: sexta, label: Sexta }
+                - { name: sabado, label: Sábado }
+                - { name: domingo, label: Domingo }
+          - name: abre
+            label: Abre às
+            type: string
+            description: "Formato 24 horas, ex.: 11:00"
+            pattern:
+              regex: "^([01][0-9]|2[0-3]):[0-5][0-9]$"
+              message: "Use o formato 11:00"
+          - name: fecha
+            label: Fecha às
+            type: string
+            description: "Formato 24 horas, ex.: 15:00"
+            pattern:
+              regex: "^([01][0-9]|2[0-3]):[0-5][0-9]$"
+              message: "Use o formato 15:00"
+      - name: cnpj
+        label: CNPJ (opcional)
+        type: string
+        description: "Formato 00.000.000/0000-00. Aparece no rodapé."
+        pattern:
+          regex: "^([0-9]{2}\\.[0-9]{3}\\.[0-9]{3}/[0-9]{4}-[0-9]{2})?$"
+          message: "Use o formato 00.000.000/0000-00"

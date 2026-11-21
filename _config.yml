@@ -1,0 +1,13 @@
+# Configuração do Jekyll (o GitHub Pages monta o site com ele).
+# O conteúdo fica em _data/config.yml (informações) e _data/cardapio.yml (pratos).
+title: Barraca da Francisca
+lang: pt-BR
+
+# Endereço atual: tonypinheiro.github.io/panelasquebrilham
+# Quando tiver domínio próprio (ex.: barracadafran.com.br), troque para:  baseurl: ""
+baseurl: /panelasquebrilham
+url: https://tonypinheiro.github.io
+
+exclude:
+  - README.md
+  - .pages.yml

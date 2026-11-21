@@ -1,252 +1,438 @@
+---
+# Página da Barraca da Francisca. O conteúdo vem de _data/config.yml e _data/cardapio.yml.
+# Para editar sem mexer em código, use o editor: app.pagescms.org
+layout: null
+---
+{%- assign c = site.data.config -%}
+{%- assign cardapio = site.data.cardapio -%}
+{%- assign zap_base = "https://wa.me/" | append: c.whatsapp | append: "?text=" -%}
+{%- assign zap_pedido = c.mensagem | default: "Olá! Vim pelo site e quero fazer um pedido." | url_encode | replace: "+", "%20" -%}
 <!doctype html>
-<html lang="pt-br">
-
+<html lang="pt-BR">
 <head>
-	<link rel="shortcut icon" type="image/x-icon" href="img/favicon.ico">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Bode, galinha caipira, mocotó, etc.">
-    <meta name="author" content="Francisca/Barraca da Francisca">
-    <title>Barraca da Fran - Panelas que brilham</title>
-    
-    <!-- Favicon / Trocar a URL -->
-    <link rel="shortcut icon" href="https://ehayashi.com/wp-content/uploads/2020/12/EH-Red.png" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{{ c.nome | escape }} | {{ c.slogan | escape }}</title>
+  <meta name="description" content="{{ c.descricao | escape }} Faça seu pedido pelo WhatsApp ou pelo iFood.">
+  <meta name="theme-color" content="#F7D046">
+  <link rel="canonical" href="{{ site.url }}{{ '/' | relative_url }}">
 
-    <!-- Custom CSS -->
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <!-- Bootstrap core CSS -->
-    <link rel="stylesheet" type="text/css" href="font/bootstrap-icons.css">
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
-    
-    <!-- Custom font styles for this template // Google Font -->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:title" content="{{ c.nome | escape }}">
+  <meta property="og:description" content="{{ c.descricao | escape }} Peça pelo WhatsApp.">
+  <meta property="og:url" content="{{ site.url }}{{ '/' | relative_url }}">
+  <meta property="og:image" content="{{ site.url }}{{ '/assets/brand/og.jpg' | relative_url }}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
 
-<!-- SEO -->
-<meta name="description" content="">
-<meta name="author" content="Barraca da Francisca">
-<meta name="keywords" content=""/>
+  <link rel="icon" href="{{ '/favicon.ico' | relative_url }}" sizes="48x48">
+  <link rel="apple-touch-icon" href="{{ '/assets/brand/apple-touch-icon.png' | relative_url }}">
+  <link rel="preload" href="{{ '/assets/fonts/lilita-one.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ '/assets/fonts/nunito.woff2' | relative_url }}" as="font" type="font/woff2" crossorigin>
 
-<link rel="alternate" href="" hreflang="pt-br" />
-<meta name="robots" content="index, follow">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    "name": {{ c.nome | jsonify }},
+    "servesCuisine": "Comida caseira maranhense",
+    "address": {{ c.endereco | jsonify }},
+    "telephone": {{ "+" | append: c.whatsapp | jsonify }},
+    "url": "{{ site.url }}{{ '/' | relative_url }}"
+  }
+  </script>
 
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta property="og:url" content="https://tonypinheiro.github.io/panelasquebrilham/" />
-<meta property="og:title" content="Barraca da Francisca" />
-<meta property="og:image" content="https://tonypinheiro.github.io/panelasquebrilham/img/arte%20logo_2021.png" />
-<meta property="og:description" content="Bode no Leite de Coco, Galinha caipira, Camarão, Mocotó, Porco assado, Porco cozido, Sarrabulho, Rabada, Assado de panela, Língua (de Boi), Peixe frito escabeche, Frango assado, Bife e Churrasquinho." />
-<meta name="theme-color" content="#fe2813">
+  <style>
+    @font-face { font-family: "Lilita One"; src: url({{ '/assets/fonts/lilita-one.woff2' | relative_url }}) format("woff2"); font-weight: 400; font-display: swap; }
+    @font-face { font-family: "Nunito"; src: url({{ '/assets/fonts/nunito.woff2' | relative_url }}) format("woff2"); font-weight: 200 1000; font-display: swap; }
 
-<meta property="business:contact_data:country_name" content="BRASIL" />
-<meta property="business:contact_data:website" content="https://tonypinheiro.github.io/panelasquebrilham/" />
-<meta property="business:contact_data:region" content="MA" />
-<meta property="business:contact_data:email" content="EMAIL" />
-<meta property="business:contact_data:phone_number" content="+5598984673259" />
+    :root {
+      --gema: #F7D046;        /* amarelo da barraca */
+      --gema-forte: #EDBD1F;
+      --colorau: #C62A1D;     /* vermelho do letreiro */
+      --cheiro: #187A4A;      /* verde do cheiro-verde e do WhatsApp */
+      --carvao: #2E2018;      /* texto */
+      --prato: #FFFDF8;       /* fundo dos cartões */
+      --linha: rgba(46, 32, 24, .12);
+      --suave: #6B5A4E;
+      --letreiro: "Lilita One", "Arial Black", sans-serif;
+      --texto: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      min-height: 100vh;
+      font-family: var(--texto);
+      font-size: 17px;
+      line-height: 1.5;
+      color: var(--carvao);
+      background:
+        radial-gradient(120% 60% at 50% 0%, #FBE27C 0%, rgba(251, 226, 124, 0) 70%),
+        var(--gema);
+      -webkit-font-smoothing: antialiased;
+    }
+    img, svg { display: block; }
+    a { color: inherit; }
+    :focus-visible { outline: 3px solid var(--carvao); outline-offset: 3px; border-radius: 12px; }
 
+    .pagina { max-width: 480px; margin: 0 auto; padding: calc(env(safe-area-inset-top) + 22px) 18px calc(env(safe-area-inset-bottom) + 32px); }
 
-<meta name="twitter:card" content="summary" />
-<meta name="twitter:description" content="Bode no Leite de Coco, Galinha caipira, Camarão, Mocotó, Porco assado, Porco cozido, Sarrabulho, Rabada, Assado de panela, Língua (de Boi), Peixe frito escabeche, Frango assado, Bife e Churrasquinho."/>
-<meta name="twitter:title" content="Barraca da Francisca" />
-<meta name="twitter:image" content="https://tonypinheiro.github.io/panelasquebrilham/img/arte%20logo_2021.png" />
+    /* ---------- Topo ---------- */
+    .topo { text-align: center; }
+    .logo { width: 84px; height: 84px; margin: 0 auto; filter: drop-shadow(0 6px 10px rgba(46, 32, 24, .18)); }
+    .panela { width: min(300px, 82vw); height: auto; margin: 6px auto -6px; cursor: pointer; }
+    h1 {
+      font-family: var(--letreiro);
+      font-weight: 400;
+      font-size: clamp(2.5rem, 11.5vw, 3.3rem);
+      line-height: .98;
+      color: var(--colorau);
+      letter-spacing: .005em;
+      text-shadow: 0 3px 0 rgba(255, 253, 248, .55);
+    }
+    .slogan { font-family: var(--letreiro); font-size: 1.45rem; color: var(--cheiro); margin-top: 6px; }
+    .descricao { margin: 8px auto 0; max-width: 30ch; font-size: 1.06rem; }
 
+    .status {
+      display: inline-flex; align-items: center; gap: 8px;
+      margin-top: 14px;
+      padding: 7px 14px;
+      border-radius: 999px;
+      background: var(--prato);
+      font-weight: 800; font-size: .95rem;
+      box-shadow: 0 0 0 1.5px var(--linha);
+    }
+    .status i { width: 10px; height: 10px; border-radius: 50%; background: var(--suave); flex: none; }
+    .status.aberto i { background: #1FA35C; box-shadow: 0 0 0 4px rgba(31, 163, 92, .22); }
+    .status.fechado i { background: var(--colorau); }
+    .status[hidden] { display: none; }
 
-<meta name="geo.placename" content="https://goo.gl/maps/CHPKMF4vRAGWLSQy5" />
-<meta name="geo.region" content="BR" />
-<meta name="description" content="Bode, Galinha capira, mocotó e etc" />
-<link rel="canonical" href="https://tonypinheiro.github.io/panelasquebrilham/" />
+    .aviso {
+      margin-top: 16px;
+      padding: 12px 16px;
+      border-radius: 16px;
+      background: var(--colorau); color: #fff;
+      font-weight: 800; text-align: center;
+    }
 
-<meta property="og:type" content="https://tonypinheiro.github.io/panelasquebrilham/" />
-<meta property="og:locale" content="pt_BR" />
-<meta name="format-detection" content="telephone=no">
-<!-- SEO -->
+    /* ---------- Botões de pedido ---------- */
+    .pedir { display: grid; gap: 10px; margin-top: 20px; }
+    .botao {
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      min-height: 62px;
+      padding: 0 20px;
+      border-radius: 20px;
+      font-weight: 900; font-size: 1.15rem;
+      text-decoration: none;
+      transition: transform .12s ease;
+    }
+    .botao:active { transform: scale(.98); }
+    .botao svg { width: 28px; height: 28px; fill: currentColor; flex: none; }
+    .botao small { display: block; font-size: .82rem; font-weight: 700; opacity: .85; }
+    .botao span { text-align: left; line-height: 1.2; }
+    .zap { background: var(--cheiro); color: #fff; box-shadow: 0 10px 0 -2px #0F5733, 0 18px 26px -14px rgba(15, 87, 51, .8); }
+    .ifood { background: var(--prato); color: var(--colorau); box-shadow: 0 0 0 2px var(--colorau); }
 
-	
+    /* ---------- Cartões ---------- */
+    .cartao {
+      margin-top: 26px;
+      padding: 20px 18px;
+      border-radius: 24px;
+      background: var(--prato);
+      box-shadow: 0 1px 0 var(--linha), 0 16px 30px -22px rgba(46, 32, 24, .5);
+    }
+    h2 { font-family: var(--letreiro); font-weight: 400; font-size: 1.7rem; line-height: 1.1; color: var(--colorau); }
+    .nota { margin-top: 6px; color: var(--suave); font-size: .98rem; }
+
+    .pratos { list-style: none; padding: 0; margin-top: 12px; }
+    .pratos li { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px dashed var(--linha); }
+    .pratos li:first-child { border-top: 0; }
+    .pratos img { width: 56px; height: 56px; border-radius: 14px; object-fit: cover; flex: none; }
+    .prato-info { flex: 1; min-width: 0; }
+    .prato-info b { display: block; font-size: 1.05rem; font-weight: 800; line-height: 1.25; }
+    .prato-info small { display: block; color: var(--suave); font-size: .92rem; }
+    .preco { font-weight: 900; white-space: nowrap; }
+    .pedir-prato {
+      flex: none;
+      display: inline-flex; align-items: center; gap: 6px;
+      min-height: 40px; padding: 0 12px;
+      border-radius: 12px;
+      background: rgba(24, 122, 74, .1); color: var(--cheiro);
+      font-weight: 800; font-size: .92rem; text-decoration: none;
+    }
+    .pedir-prato svg { width: 18px; height: 18px; fill: currentColor; }
+
+    .endereco { margin-top: 8px; font-size: 1.02rem; }
+    .acao {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      min-height: 52px; margin-top: 14px;
+      border-radius: 16px;
+      background: var(--carvao); color: var(--prato);
+      font-weight: 800; text-decoration: none;
+    }
+    .acao svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+    .horarios { width: 100%; margin-top: 10px; border-collapse: collapse; font-size: 1rem; }
+    .horarios td { padding: 8px 0; border-top: 1px dashed var(--linha); }
+    .horarios tr:first-child td { border-top: 0; }
+    .horarios td + td { text-align: right; font-weight: 800; }
+    .horarios tr.hoje td { color: var(--cheiro); }
+
+    .redes { display: flex; justify-content: center; gap: 12px; margin-top: 28px; }
+    .redes a {
+      display: inline-flex; align-items: center; gap: 8px;
+      min-height: 48px; padding: 0 16px;
+      border-radius: 999px;
+      background: var(--prato);
+      font-weight: 800; text-decoration: none;
+      box-shadow: 0 0 0 1.5px var(--linha);
+    }
+    .redes svg { width: 20px; height: 20px; fill: currentColor; }
+
+    footer { margin-top: 26px; text-align: center; font-size: .88rem; color: var(--suave); line-height: 1.6; }
+
+    /* O brilho da panela: o único movimento que acontece sozinho */
+    .brilho { transform: translateX(-260px); }
+    @media (prefers-reduced-motion: no-preference) {
+      .brilha .brilho { animation: brilho 1.3s .5s cubic-bezier(.4, 0, .2, 1) both; }
+      .brilha .faisca { animation: faisca 1.3s .9s ease-out both; transform-box: fill-box; transform-origin: center; }
+      @keyframes brilho { from { transform: translateX(-260px); } to { transform: translateX(300px); } }
+      @keyframes faisca { 0% { transform: scale(0); opacity: 0; } 40% { transform: scale(1.25); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+    }
+    @media (min-width: 700px) {
+      .pagina { padding-top: 40px; }
+    }
+  </style>
 </head>
-
 <body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <!-- Ícones das marcas: Simple Icons (CC0) -->
+    <symbol id="i-whatsapp" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></symbol>
+    <symbol id="i-instagram" viewBox="0 0 24 24"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"/></symbol>
+    <symbol id="i-facebook" viewBox="0 0 24 24"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"/></symbol>
+    <symbol id="i-ifood" viewBox="0 0 24 24"><path d="M8.428 1.67c-4.65 0-7.184 4.149-7.184 6.998 0 2.294 2.2 3.299 4.25 3.299l-.006-.006c4.244 0 7.184-3.854 7.184-6.998 0-2.29-2.175-3.293-4.244-3.293zm11.328 0c-4.65 0-7.184 4.149-7.184 6.998 0 2.294 2.2 3.299 4.25 3.299l-.006-.006C21.061 11.96 24 8.107 24 4.963c0-2.29-2.18-3.293-4.244-3.293zM14.172 14.52l2.435 1.834c-2.17 2.07-6.124 3.525-9.353 3.17A8.913 8.913 0 01.23 14.541H0a9.598 9.598 0 008.828 7.758c3.814.24 7.323-.905 9.947-3.13l-.004.007 1.08 2.988 1.555-7.623-7.234-.02Z"/></symbol>
+  </svg>
 
-	<script type="text/javascript">var message="Desculpe, o clique com o botão direito foi desativado.";
-    function clickIE() {if (document.all) {(message);return false;}}
-    function clickNS(e) {if (document.layers||(document.getElementById&&!document.all)){if (e.which==2||e.which==3) {(message);return false;}}}
-    if (document.layers) {document.captureEvents(Event.MOUSEDOWN);document.onmousedown=clickNS;}
-    else{document.onmouseup=clickNS;document.oncontextmenu=clickIE;}
-    document.oncontextmenu=new Function("return false")</script>
+  <main class="pagina">
+    <header class="topo">
+      <img class="logo" src="{{ '/assets/img/logo.webp' | relative_url }}" alt="Logo da {{ c.nome | escape }}" width="84" height="84">
 
-	<style>
-        .box-cookies.hide {
-            display: none !important;
-        }
-        
-        .box-cookies {
-            position: fixed;
-            background: rgba(0, 0, 0, .9);
-            width: 100%;
-            z-index: 998;
-            bottom: 0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        
-        .box-cookies .msg-cookies,
-        .box-cookies .btn-cookies {
-            text-align: center;
-            padding: 25px;
-            color: #fff;
-            font-size: 18px;
-        }
-        
-        .box-cookies .btn-cookies {
-            background: #e5db1e;
-            cursor: pointer;
-            align-self: normal;
-        }
-        
-        @media screen and (max-width: 600px) {
-            .box-cookies {
-                flex-direction: column;
-            }
-        }
-    </style>
+      <svg class="panela brilha" viewBox="0 0 320 210" role="img" aria-label="Panela de alumínio brilhando">
+        <defs>
+          <linearGradient id="aluminio" x1="0" x2="1">
+            <stop offset="0" stop-color="#7F8896"/>
+            <stop offset=".18" stop-color="#E9EDF2"/>
+            <stop offset=".32" stop-color="#FFFFFF"/>
+            <stop offset=".5" stop-color="#BCC4CE"/>
+            <stop offset=".72" stop-color="#EEF1F5"/>
+            <stop offset="1" stop-color="#76808E"/>
+          </linearGradient>
+          <linearGradient id="tampa" x1="0" x2="1">
+            <stop offset="0" stop-color="#8A93A1"/>
+            <stop offset=".3" stop-color="#F7F9FB"/>
+            <stop offset=".55" stop-color="#C9D0D9"/>
+            <stop offset="1" stop-color="#848E9B"/>
+          </linearGradient>
+          <linearGradient id="faixa-brilho" x1="0" x2="1">
+            <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+            <stop offset=".5" stop-color="#fff" stop-opacity=".95"/>
+            <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+          </linearGradient>
+          <clipPath id="corpo-panela">
+            <path d="M74 98H246V168Q246 190 222 190H98Q74 190 74 168Z"/>
+            <path d="M70 96Q78 52 160 50Q242 52 250 96Z"/>
+          </clipPath>
+        </defs>
+        <!-- fumaça -->
+        <g fill="none" stroke="#FFFDF8" stroke-width="5" stroke-linecap="round" opacity=".85">
+          <path d="M126 36C116 26 136 18 126 6"/>
+          <path d="M160 30C150 18 170 10 160 -2"/>
+          <path d="M194 36C184 26 204 18 194 6"/>
+        </g>
+        <ellipse cx="160" cy="196" rx="104" ry="9" fill="#2E2018" opacity=".16"/>
+        <!-- alças -->
+        <rect x="40" y="108" width="46" height="16" rx="8" fill="#5E6775"/>
+        <rect x="234" y="108" width="46" height="16" rx="8" fill="#5E6775"/>
+        <!-- corpo -->
+        <path d="M74 98H246V168Q246 190 222 190H98Q74 190 74 168Z" fill="url(#aluminio)"/>
+        <rect x="74" y="98" width="172" height="10" fill="#6E7785" opacity=".35"/>
+        <!-- tampa -->
+        <path d="M70 96Q78 52 160 50Q242 52 250 96Z" fill="url(#tampa)"/>
+        <rect x="66" y="92" width="188" height="9" rx="4.5" fill="#9AA3AF"/>
+        <rect x="146" y="38" width="28" height="14" rx="7" fill="#2E2018"/>
+        <!-- reflexos fixos -->
+        <path d="M100 112V176" stroke="#fff" stroke-width="7" stroke-linecap="round" opacity=".7"/>
+        <path d="M104 86Q114 66 140 60" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".8"/>
+        <!-- o brilho que passa -->
+        <g clip-path="url(#corpo-panela)">
+          <rect class="brilho" x="20" y="30" width="70" height="200" fill="url(#faixa-brilho)" transform="skewX(-20)"/>
+        </g>
+        <!-- faíscas -->
+        <path class="faisca" d="M262 52l4 11 11 4-11 4-4 11-4-11-11-4 11-4z" fill="#FFFDF8"/>
+        <path class="faisca" d="M58 70l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="#FFFDF8"/>
+        <path class="faisca" d="M236 150l2.5 6 6 2.5-6 2.5-2.5 6-2.5-6-6-2.5 6-2.5z" fill="#FFFDF8"/>
+      </svg>
 
+      <h1>{{ c.nome | escape }}</h1>
+      {%- if c.slogan and c.slogan != "" %}
+      <p class="slogan">{{ c.slogan | escape }}</p>
+      {%- endif %}
+      {%- if c.descricao and c.descricao != "" %}
+      <p class="descricao">{{ c.descricao | escape }}</p>
+      {%- endif %}
+      <p class="status" hidden><i></i><span></span></p>
+    </header>
 
-<!-- Whatsapp -->
+    {%- if c.aviso and c.aviso != "" %}
+    <p class="aviso">{{ c.aviso | escape }}</p>
+    {%- endif %}
 
-<div id="div_whatsapp"> <a href="https://api.whatsapp.com/send/?phone=5598984673259&text&app_absent=0" target="_blank"> <img src="img/WhatsApp50x50.png"></a></div>
-	
-<style type="text/css">
- #div_whatsapp {
+    <div class="pedir">
+      {%- if c.whatsapp and c.whatsapp != "" %}
+      <a class="botao zap" href="{{ zap_base }}{{ zap_pedido }}" target="_blank" rel="noopener">
+        <svg aria-hidden="true"><use href="#i-whatsapp"/></svg>
+        <span>Fazer pedido no WhatsApp<small>A mensagem já vai escrita</small></span>
+      </a>
+      {%- endif %}
+      {%- if c.ifood and c.ifood != "" %}
+      <a class="botao ifood" href="{{ c.ifood | escape }}" target="_blank" rel="noopener">
+        <svg aria-hidden="true"><use href="#i-ifood"/></svg>
+        <span>Pedir pelo iFood</span>
+      </a>
+      {%- endif %}
+    </div>
 
-   position: fixed;
-   margin: 10px;
-   margin-top: 300px;
-   z-index: 5000;
-   bottom: 0px;
-   right: 0px;
-}
-</style>
+    {%- assign tem_pratos = false -%}
+    {%- for p in cardapio.pratos -%}{%- if p.mostrar != false and p.nome and p.nome != "" -%}{%- assign tem_pratos = true -%}{%- endif -%}{%- endfor -%}
+    {%- if tem_pratos %}
+    <section class="cartao" aria-labelledby="t-cardapio">
+      <h2 id="t-cardapio">Cardápio</h2>
+      {%- if cardapio.observacao and cardapio.observacao != "" %}
+      <p class="nota">{{ cardapio.observacao | escape }}</p>
+      {%- endif %}
+      <ul class="pratos">
+        {%- for p in cardapio.pratos %}{% if p.mostrar != false and p.nome and p.nome != "" %}
+        {%- assign msg = "Olá! Vim pelo site e quero pedir: " | append: p.nome | url_encode | replace: "+", "%20" %}
+        <li>
+          {%- if p.foto and p.foto != "" %}<img src="{{ p.foto | relative_url }}" alt="" loading="lazy">{% endif %}
+          <span class="prato-info">
+            <b>{{ p.nome | escape }}</b>
+            {%- if p.descricao and p.descricao != "" %}<small>{{ p.descricao | escape }}</small>{% endif %}
+            {%- if p.preco and p.preco != "" %}<small class="preco">{{ p.preco | escape }}</small>{% endif %}
+          </span>
+          {%- if c.whatsapp and c.whatsapp != "" %}
+          <a class="pedir-prato" href="{{ zap_base }}{{ msg }}" target="_blank" rel="noopener" aria-label="Pedir {{ p.nome | escape }} pelo WhatsApp"><svg aria-hidden="true"><use href="#i-whatsapp"/></svg>Pedir</a>
+          {%- endif %}
+        </li>
+        {%- endif %}{% endfor %}
+      </ul>
+    </section>
+    {%- endif %}
 
-<!-- Whatsapp -->
+    {%- if c.endereco and c.endereco != "" %}
+    <section class="cartao" aria-labelledby="t-onde">
+      <h2 id="t-onde">Onde estamos</h2>
+      <p class="endereco">{{ c.endereco | escape }}</p>
+      {%- if c.mapa and c.mapa != "" %}
+      <a class="acao" href="{{ c.mapa | escape }}" target="_blank" rel="noopener">
+        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+        Como chegar
+      </a>
+      {%- endif %}
+    </section>
+    {%- endif %}
 
-    <main>
-        <!--Photo-->
-        <div class="container-fluid photo" id="top">
-            <div class="row">
-                <div class="col">
-                    <p>
-                        <!-- Altere aqui o seu avatar. Utilizar proporção de 1:1 (Quadrado)-->
-                        <img src="img/arte logo_2021.png">
-                    </p>
-                </div>
-            </div>
-        </div>
+    {%- if c.horarios and c.horarios.size > 0 %}
+    <section class="cartao" aria-labelledby="t-horario">
+      <h2 id="t-horario">Horário</h2>
+      <table class="horarios"><tbody></tbody></table>
+    </section>
+    {%- endif %}
 
-        <!--Title-->
-        <div class="container-fluid title">
-            <div class="row">
-                <div class="col">
-                    <h1>BARRACA DA FRANCISCA</h1>
-                    <h2>@Barracadafran</h2>
-                </div>
-            </div>
-        </div>
-
-        <!--Bio-->
-        <div class="container-fluid bio">
-            <div class="row">
-                <div class="col">
-                    <p>Faça seu pedido agora mesmo</p>
-					 <img src="img/Sem-Título-1.gif">
-                </div>
-            </div>
-        </div>
-
-        <!--Links-->
-        <div class="container-fluid links">
-            <div class="row">
-                <div class="col">
-                    <a href="https://api.whatsapp.com/send/?phone=5598984673259&text&app_absent=0" target="_blank" class="botao">
-                        <p>➡️Pedido no Whatsapp😋</p>
-                    </a>
-                    <a href="https://goo.gl/maps/5vc6WnPjSdSFyxp7A?" target="_blank" class="botao">
-                        <p>➡️Endereço🚩</p>
-                    </a>
-                    <a href="https://www.instagram.com/barraca.da.fran/" target="_blank" class="botao">
-                        <p>➡️Instagram📷</p>
-					</a>
-                    <a href="https://www.facebook.com/Barraca-da-francisca-109467583924372" target="_blank" class="botao">
-                        <p>➡️Facebook✅</p>
-                    <!-- Botão Extra // Utilize quantos quiser
-                    <a href="#" target="_blank" class="botao">
-                        <p>Link</p>
-                    -->
-					</a>
-                </div>
-            </div>
-        </div>
-		<img src="img/Sem-Título-1.gif">
-		<p>&nbsp;</p>
-        <!--Social-->
-        <div class="container-fluid social">
-            <div class="row">
-                <div class="col">
-                    <ul>
-                        <!-- Copiar e colocar o modelo dos icons // Para outros icons, veja a biblioteca do Boostrap 5 -->
-                        <li><a href="https://www.instagram.com/barraca.da.fran/" target="_blank"><i class="bi bi-instagram" style="font-size: 2rem;" title="Instagram"></i></a></li>
-                        <li><a href="https://www.ifood.com.br/delivery/sao-luis-ma/barraca-da-francisca-forquilha/bf5bc10b-7620-4328-b00f-b2b29448ce2c" target="_blank"><i class="bi bi-cart" style="font-size: 2rem;" title="Ifood"></i></a></li>
-                        <li><a href="https://api.whatsapp.com/send/?phone=5598984673259&text&app_absent=0" target="_blank"><i class="bi bi-clipboard-check" style="font-size: 2rem;" title="Cardápio"></i></a></li>
-                        <li><a href="https://api.whatsapp.com/send/?phone=5598984673259&text&app_absent=0" target="_blank"><i class="bi bi-chat-left-text" style="font-size: 2rem;" title="Whatsapp"></i></a></li>
-                        <li><a href="https://www.ifood.com.br/delivery/sao-luis-ma/barraca-da-francisca-forquilha/bf5bc10b-7620-4328-b00f-b2b29448ce2c" target="_blank"><i class="bi bi-clipboard-data" style="font-size: 2rem;" title="Ifood"></i></a></li>
-			<li><a href="https://api.whatsapp.com/send/?phone=5598984673259&text&app_absent=0" target="_blank"><i class="bi bi-credit-card" style="font-size: 2rem;" title="Whatsapp"></i></a></li>    
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </main>
-
+    <nav class="redes" aria-label="Redes sociais">
+      {%- if c.instagram and c.instagram != "" %}
+      <a href="{{ c.instagram | escape }}" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-instagram"/></svg>Instagram</a>
+      {%- endif %}
+      {%- if c.facebook and c.facebook != "" %}
+      <a href="{{ c.facebook | escape }}" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-facebook"/></svg>Facebook</a>
+      {%- endif %}
+    </nav>
 
     <footer>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col">
-                    <!-- Pode alterar se quiser, mas ficarei muito grato caso possa deixar um link para o meu site :) -->
-                    <p>
-                        2022 Copyright© | Todos os direitos reservados
-                    </p>
-                    <p>
-                        Endereço: Estr. de Ribamar, S/N - Forquilha, São Luís - MA, 65060-540
-                    </p>
-			<p>
-                        CNPJ: 171.645.641.564.156-41
-                    </p>
-                    <p>&nbsp;</p>
-                    <p>
-                        <a href="#top"><i class="bi bi-arrow-up-circle-fill"></i> Ir pra cima</a>
-                    </p>
-                </div>
-            </div>
-        </div> 
+      {{ c.nome | escape }}{% if c.cnpj and c.cnpj != "" %}<br>CNPJ {{ c.cnpj | escape }}{% endif %}
     </footer>
-<div class="box-cookies hide">
-        <p class="msg-cookies">Este site usa cookies para garantir que você obtenha a melhor experiência.</p>
-        <button class="btn-cookies">Aceitar!</button>
-    </div>
-    <script>
-        if (!localStorage.pureJavaScriptCookies) {
-            document.querySelector(".box-cookies").classList.remove('hide');
+  </main>
+
+  <script id="horarios" type="application/json">{{ c.horarios | jsonify | replace: "</", "<\/" }}</script>
+  <script>
+    (() => {
+      // Horário: monta a tabela e diz se está aberto agora (sempre no horário de São Luís)
+      let horarios = [];
+      try { horarios = JSON.parse(document.getElementById('horarios').textContent) || []; } catch (e) { horarios = []; }
+      const DIAS = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
+      const NOMES = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+      const minutos = (t) => { const m = /^(\d{1,2}):(\d{2})$/.exec(String(t || '').trim()); return m ? Number(m[1]) * 60 + Number(m[2]) : null; };
+      const hora = (t) => { const [h, m] = String(t).split(':'); return m === '00' ? `${Number(h)}h` : `${Number(h)}h${m}`; };
+      const semAcento = (s) => String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+
+      const porDia = Array.from({ length: 7 }, () => []);
+      (Array.isArray(horarios) ? horarios : []).forEach((h) => {
+        const abre = minutos(h && h.abre), fecha = minutos(h && h.fecha);
+        if (abre === null || fecha === null) return;
+        (Array.isArray(h.dias) ? h.dias : []).forEach((d) => {
+          const i = DIAS.indexOf(semAcento(d));
+          if (i >= 0) porDia[i].push({ abre, fecha, txt: `${hora(h.abre)} às ${hora(h.fecha)}` });
+        });
+      });
+      if (!porDia.some((d) => d.length)) return;
+
+      let hoje = new Date().getDay(), agora = new Date().getHours() * 60 + new Date().getMinutes();
+      try {
+        const p = Object.fromEntries(new Intl.DateTimeFormat('en-US', { timeZone: 'America/Fortaleza', weekday: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
+          .formatToParts(new Date()).map((x) => [x.type, x.value]));
+        hoje = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(p.weekday);
+        agora = (Number(p.hour) % 24) * 60 + Number(p.minute);
+      } catch (e) { /* usa o relógio do aparelho */ }
+
+      const corpo = document.querySelector('.horarios tbody');
+      if (corpo) {
+        [1, 2, 3, 4, 5, 6, 0].forEach((d) => {
+          const tr = document.createElement('tr');
+          if (d === hoje) tr.className = 'hoje';
+          tr.innerHTML = `<td>${NOMES[d]}${d === hoje ? ' (hoje)' : ''}</td><td>${porDia[d].length ? porDia[d].map((x) => x.txt).join(' e ') : 'Fechado'}</td>`;
+          corpo.appendChild(tr);
+        });
+      }
+
+      const status = document.querySelector('.status');
+      const aberto = porDia[hoje].find((x) => agora >= x.abre && agora < x.fecha);
+      let texto, classe;
+      if (aberto) {
+        texto = `Aberto agora, até ${hora(`${Math.floor(aberto.fecha / 60)}:${String(aberto.fecha % 60).padStart(2, '0')}`)}`; classe = 'aberto';
+      } else {
+        const maisTarde = porDia[hoje].filter((x) => x.abre > agora).sort((a, b) => a.abre - b.abre)[0];
+        classe = 'fechado';
+        if (maisTarde) texto = `Fechado agora. Abre hoje às ${maisTarde.txt.split(' às ')[0]}`;
+        else {
+          for (let k = 1; k <= 7; k++) {
+            const d = (hoje + k) % 7;
+            if (porDia[d].length) {
+              const primeiro = porDia[d].slice().sort((a, b) => a.abre - b.abre)[0];
+              texto = `Fechado agora. Abre ${k === 1 ? 'amanhã' : NOMES[d].toLowerCase()} às ${primeiro.txt.split(' às ')[0]}`;
+              break;
+            }
+          }
         }
+      }
+      if (texto) { status.querySelector('span').textContent = texto; status.classList.add(classe); status.hidden = false; }
+    })();
 
-        const acceptCookies = () => {
-            document.querySelector(".box-cookies").classList.add('hide');
-            localStorage.setItem("pureJavaScriptCookies", "accept");
-        };
-
-        const btnCookies = document.querySelector(".btn-cookies");
-
-        btnCookies.addEventListener('click', acceptCookies);
-    </script>
+    // Tocar na panela faz ela brilhar de novo
+    document.querySelector('.panela').addEventListener('click', (e) => {
+      const s = e.currentTarget; s.classList.remove('brilha'); void s.getBoundingClientRect(); s.classList.add('brilha');
+    });
+  </script>
 </body>
-    <!-- Bootstrap core JS -->
-    <script src="js/bootstrap.js"></script>
-
 </html>

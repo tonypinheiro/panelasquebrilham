@@ -1,0 +1,30 @@
+observacao: Os pratos variam de um dia para o outro. Pergunte no WhatsApp o que tem hoje.
+pratos:
+  - nome: Bode no leite de coco
+    mostrar: true
+  - nome: Galinha caipira
+    mostrar: true
+  - nome: Camarão
+    mostrar: true
+  - nome: Mocotó
+    mostrar: true
+  - nome: Porco assado
+    mostrar: true
+  - nome: Porco cozido
+    mostrar: true
+  - nome: Sarrabulho
+    mostrar: true
+  - nome: Rabada
+    mostrar: true
+  - nome: Assado de panela
+    mostrar: true
+  - nome: Língua de boi
+    mostrar: true
+  - nome: Peixe frito no escabeche
+    mostrar: true
+  - nome: Frango assado
+    mostrar: true
+  - nome: Bife
+    mostrar: true
+  - nome: Churrasquinho
+    mostrar: true
